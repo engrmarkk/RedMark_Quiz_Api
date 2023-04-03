@@ -111,6 +111,8 @@ class UserProfile(AbstractBaseUser):
     email = models.EmailField(verbose_name='email address', max_length=255, unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
+    scores = models.IntegerField(default=0)
+    taken = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
