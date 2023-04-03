@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .project_models import Answer, Options, Question, Is_answered, UserProfile
+from .models import Answer, Options, Question, Is_answered, UserProfile
+
 
 # Register your models here.
 admin.site.register(Answer)
