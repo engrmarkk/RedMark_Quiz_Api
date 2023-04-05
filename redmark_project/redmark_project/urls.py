@@ -19,4 +19,5 @@ from django.urls import path, include
 urlpatterns = [
     # path("admin/", admin.site.urls),
     path("", include("redmark_app.urls")),
+    path("/<int:pk>/", include("redmark_app.urls")),
 ]
