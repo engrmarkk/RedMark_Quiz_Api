@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from ..models import Question
@@ -38,4 +37,4 @@ class EachQuestionView(APIView):
     def delete(self, request, pk):
         qs = get_object_or_404(Question, id=pk)
         qs.delete()
-        return Response("Question deleted successfully")
+        return Response({"message": "Question deleted successfully"})
