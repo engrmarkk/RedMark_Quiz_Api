@@ -11,9 +11,8 @@ class Question(models.Model):
     id = models.AutoField(primary_key=True)
     # This is the question column for the questions table
     question_text = models.TextField()
-    # This is the relationship between the questions table and the options table
-    answer = models.ManyToManyField('Answer', related_name='question_answers')
-    options = models.ManyToManyField('Options', related_name='question')
+    # This is the relationship between the questions table and the answer table
+    answer = models.ForeignKey('Answer', on_delete=models.CASCADE, related_name='question_answer', null=True, blank=True)
 
     # This is the representation of the questions table
     def __str__(self):
@@ -37,12 +36,12 @@ class Options(models.Model):
     # This is the fifth option column for the options table
     e = models.TextField()
     # This is the relationship between the options table and the questions table
-    question_id = models.ForeignKey('Question', on_delete=models.CASCADE, related_name='quest_options')
+    question = models.ForeignKey('Question', on_delete=models.CASCADE, related_name='quest_options', null=True)
 
     # This is the representation of the options table
     def __str__(self):
         # This returns the option
-        return f"{self.a}, {self.b}, {self.c}, {self.d}, {self.e}"
+        return f"{self.a}, {self.b}, {self.c}, {self.d}, {self.e}, {self.question}"
 
 
 class Is_answered(models.Model):
@@ -51,14 +50,14 @@ class Is_answered(models.Model):
     # This is the primary key for the is_answered table
     id = models.AutoField(primary_key=True)
     #  This is the user_id column for the is_answered table
-    user_id = models.ForeignKey('UserProfile', on_delete=models.CASCADE)
+    user = models.ForeignKey('UserProfile', on_delete=models.CASCADE)
     # This is the relationship between the is_answered table and the questions table
-    question_id = models.ForeignKey('Question', on_delete=models.CASCADE)
+    question = models.ForeignKey('Question', on_delete=models.CASCADE)
 
     # This is the representation of the is_answered table
     def __str__(self):
         # This returns the user_id
-        return f"{self.user_id}, {self.question_id}"
+        return f"{self.user}, {self.question}"
 
 
 class Answer_enum(Enum):
@@ -77,8 +76,8 @@ class Answer(models.Model):
     # This is the answer column for the answers table
     answer = models.CharField(max_length=1,
                               choices=[(tag, tag.value) for tag in Answer_enum])
-    # This is the is_correct column for the answers table
-    question_id = models.ForeignKey('Question', on_delete=models.CASCADE, related_name='question_options')
+    # This is the relationship between the answers table and the questions table
+    question = models.ForeignKey('Question', on_delete=models.CASCADE, related_name='answers')
 
     # This is the representation of the answers table
     def __str__(self):
