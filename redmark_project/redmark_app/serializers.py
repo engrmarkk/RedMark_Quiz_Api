@@ -5,7 +5,7 @@ from .models import *
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        fields = ('answer',)
+        fields = ('id', 'answer',)
 
 
 class OptionsSerializer(serializers.ModelSerializer):
