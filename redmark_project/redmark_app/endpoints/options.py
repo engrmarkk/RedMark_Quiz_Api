@@ -13,9 +13,9 @@ class OptionView(APIView):
         return Response(serializer.data)
 
 
-class EachOptionView(APIView):
+class PostOptionView(APIView):
     def post(self, request, pk):
-        question = Question.objects.filter(pk=pk).first()
+        question = Question.objects.filter(id=pk).first()
         if not question:
             raise ValidationError({"error": "Question does not exist."})
         # question = Question.objects.get(pk=pk)
@@ -28,3 +28,30 @@ class EachOptionView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors)
+
+
+class EachOptionView(APIView):
+    def get(self, request, pk):
+        option = get_object_or_404(Options, id=pk)
+        serializer = OptionsSerializerQuestionID(option)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        option = get_object_or_404(Options, id=pk)
+        serializer = OptionsSerializerQuestionID(option, data=request.data, partial=True)
+        if serializer.is_valid():
+            if "a" in serializer.validated_data:
+                option.a = serializer.validated_data["a"]
+            if "b" in serializer.validated_data:
+                option.b = serializer.validated_data["b"]
+            if "c" in serializer.validated_data:
+                option.c = serializer.validated_data["c"]
+            if "d" in serializer.validated_data:
+                option.d = serializer.validated_data["d"]
+            if "e" in serializer.validated_data:
+                option.e = serializer.validated_data["e"]
+
+            option.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+
