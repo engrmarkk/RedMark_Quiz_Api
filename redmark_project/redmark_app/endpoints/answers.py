@@ -14,8 +14,8 @@ class AnswerView(APIView):
 
 
 class PostAnswerView(APIView):
-    def post(self, request, pk):
-        question = Question.objects.get(pk=pk)
+    def post(self, request, question_id):
+        question = Question.objects.get(id=question_id)
         if not question:
             raise ValidationError({"error": "Question does not exist."})
         answer = Answer.objects.filter(question=question).first()

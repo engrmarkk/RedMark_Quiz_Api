@@ -14,14 +14,14 @@ class OptionView(APIView):
 
 
 class PostOptionView(APIView):
-    def post(self, request, pk):
-        question = Question.objects.filter(id=pk).first()
+    def post(self, request, question_id):
+        question = Question.objects.filter(id=question_id).first()
         if not question:
             raise ValidationError({"error": "Question does not exist."})
         # question = Question.objects.get(pk=pk)
         option = Options.objects.filter(question=question).first()
         if option:
-            raise ValidationError({"error": "Option already exists."})
+            raise ValidationError({"error": "Options to this question has already been posted."})
         serializer = OptionsSerializerQuestionID(data=request.data)
         if serializer.is_valid():
             serializer.validated_data['question'] = question
