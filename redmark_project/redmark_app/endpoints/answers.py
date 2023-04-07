@@ -27,3 +27,31 @@ class PostAnswerView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors)
+
+
+class EachAnswerView(APIView):
+    def get(self, pk):
+        answer = get_object_or_404(Answer, id=pk)
+        question = Question.objects.filter(question_text=answer.question).first()
+        return Response(
+            {
+                "id": answer.id,
+                "answer": answer.answer,
+                "question": question.question_text
+            }
+        )
+
+    def put(self, request, pk):
+        answer = get_object_or_404(Answer, id=pk)
+        serializer = AnswerSerializer(answer, data=request.data, partial=True)
+        if serializer.is_valid():
+            if "answer" in serializer.validated_data:
+                answer.answer = serializer.validated_data["answer"]
+            answer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+
+    def delete(self, pk):
+        answer = get_object_or_404(Answer, id=pk)
+        answer.delete()
+        return Response({"message": "Answer deleted successfully"})
