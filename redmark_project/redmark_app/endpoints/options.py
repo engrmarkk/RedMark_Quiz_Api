@@ -55,3 +55,7 @@ class EachOptionView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors)
 
+    def delete(self, pk):
+        option = get_object_or_404(Options, id=pk)
+        option.delete()
+        return Response({"message": "Option deleted successfully"})
