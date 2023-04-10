@@ -41,3 +41,18 @@ class OptionsSerializerQuestionID(serializers.ModelSerializer):
     class Meta:
         model = Options
         fields = ('id', 'question_id', 'a', 'b', 'c', 'd', 'e')
+
+
+# users serializers
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ('id', 'first_name', 'last_name', 'email', 'password')
+        # this is to make sure that the password is not returned in the response
+        extra_kwargs = {'password': {'write_only': True}}
+
+    # this is to make sure that the password is hashed
+    # when a user is created
+    def create(self, validated_data):
+        user = UserProfile.objects.create_user(**validated_data)
+        return user
