@@ -9,5 +9,7 @@ urlpatterns = [
     path("options/<int:pk>/", include("redmark_app.urls")),
     path("answers/", include("redmark_app.urls")),
     path("answers/<int:pk>/", include("redmark_app.urls")),
-    path("each-option/<int:pk>/", include("redmark_app.urls"))
+    path("each-option/<int:pk>/", include("redmark_app.urls")),
+    path("all_users/", include("redmark_app.urls")),
+    path("register/", include("redmark_app.urls")),
 ]
