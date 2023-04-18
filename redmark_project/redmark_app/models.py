@@ -1,6 +1,9 @@
 from django.db import models
 from enum import Enum
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
+
+# User = get_user_model()
 
 
 # Create your models here.
@@ -50,7 +53,7 @@ class Is_answered(models.Model):
     # This is the primary key for the is_answered table
     id = models.AutoField(primary_key=True)
     #  This is the user_id column for the is_answered table
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     # This is the relationship between the is_answered table and the questions table
     question = models.ForeignKey('Question', on_delete=models.CASCADE)
 
