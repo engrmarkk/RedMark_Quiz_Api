@@ -1,24 +1,27 @@
-from ...models import UserProfile
+from ...models import UserProfile, User
 from ...serializers import UserSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 
 class GetUsers(APIView):
+    permission_classes = (AllowAny,)
+
     def get(self, request, *args, **kwargs):
-        users = UserProfile.objects.all()
+        users = User.objects.all()
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
 
 
 class EachUser(APIView):
     def get(self, request, pk):
-        user = UserProfile.objects.get(id=pk)
+        user = User.objects.get(id=pk)
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
     def put(self, request, pk):
-        user = UserProfile.objects.get(id=pk)
+        user = User.objects.get(id=pk)
         serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             if "username" in serializer.validated_data:
@@ -32,6 +35,6 @@ class EachUser(APIView):
         return Response(serializer.errors)
 
     def delete(self, request, pk):
-        user = UserProfile.objects.get(id=pk)
+        user = User.objects.get(id=pk)
         user.delete()
         return Response({"message": "User deleted successfully"})
