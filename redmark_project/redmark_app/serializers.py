@@ -45,14 +45,20 @@ class OptionsSerializerQuestionID(serializers.ModelSerializer):
 
 # users serializers
 class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserProfile
-        fields = ('id', 'first_name', 'last_name', 'email', 'password')
-        # this is to make sure that the password is not returned in the response
-        extra_kwargs = {'password': {'write_only': True}}
+    username = serializers.CharField(max_length=150, required=True)
+    email = serializers.EmailField(max_length=254, required=True)
+    first_name = serializers.CharField(max_length=150, required=True)
+    last_name = serializers.CharField(max_length=150, required=True)
+    password = serializers.CharField(max_length=128, write_only=True)
+    scores = serializers.CharField(source='userprofile.scores', read_only=True)
+    taken = serializers.CharField(source='userprofile.taken', read_only=True)
 
-    # this is to make sure that the password is hashed
-    # when a user is created
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name',
+                  'scores', 'taken',
+                  )
+
     def create(self, validated_data):
-        user = UserProfile.objects.create_user(**validated_data)
+        user = User.objects.create_user(**validated_data)
         return user
