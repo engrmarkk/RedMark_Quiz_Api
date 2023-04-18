@@ -5,17 +5,24 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from ...utils import validate_email
 
 
 class RegisterView(APIView):
+    permission_classes = (AllowAny,)
+
     def post(self, request):
         serializer = UserSerializer(data=request.data)
-
         if serializer.is_valid():
-            existing_user = User.objects.filter(email=serializer.validated_data["email"].lower())
-            if existing_user:
-                return Response({"message": "User with email already exists"}, status=status.HTTP_400_BAD_REQUEST)
+            serializer.validated_data['email'] = serializer.validated_data['email'].lower()
+            serializer.validated_data['username'] = serializer.validated_data['username'].lower()
+            serializer.validated_data['first_name'] = serializer.validated_data['first_name'].lower()
+            serializer.validated_data['last_name'] = serializer.validated_data['last_name'].lower()
+            if not validate_email(serializer.validated_data['email']):
+                return Response({"message": "Invalid email"}, status=status.HTTP_400_BAD_REQUEST)
             serializer.save()
+            UserProfile.objects.create(user=User.objects.get(email=serializer.validated_data['email']))
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -27,7 +34,6 @@ class LoginView(ObtainAuthToken):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
-        return Response({'token': token,
+        return Response({'token': token.key,
                          'email': user.email
                          })
-
