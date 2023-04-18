@@ -21,6 +21,10 @@ class RegisterView(APIView):
             serializer.validated_data['last_name'] = serializer.validated_data['last_name'].lower()
             if not validate_email(serializer.validated_data['email']):
                 return Response({"message": "Invalid email"}, status=status.HTTP_400_BAD_REQUEST)
+            if User.objects.filter(email=serializer.validated_data['email']).exists():
+                return Response({"message": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
+            if User.objects.filter(username=serializer.validated_data['username']).exists():
+                return Response({"message": "Username already exists"}, status=status.HTTP_400_BAD_REQUEST)
             serializer.save()
             UserProfile.objects.create(user=User.objects.get(email=serializer.validated_data['email']))
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -29,8 +33,9 @@ class RegisterView(APIView):
 
 class LoginView(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
-        request.data['email'] = request.data['email'].lower()
-        serializer = self.serializer_class(data=request.data, context={'request': request})
+        request.data['username'] = request.data['username'].lower()
+        serializer = self.serializer_class(data=request.data,
+                                           context={'request': request})
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
