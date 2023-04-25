@@ -14,4 +14,5 @@ urlpatterns = [
     path("register/", include("redmark_app.urls")),
     path("login/", include("redmark_app.urls")),
     path("logout/", include("redmark_app.urls")),
+    path("user/<int:pk>/", include("redmark_app.urls")),
 ]
