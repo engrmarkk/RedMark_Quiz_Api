@@ -3,6 +3,8 @@ from ...serializers import UserSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework import status
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class GetUsers(APIView):
@@ -16,7 +18,10 @@ class GetUsers(APIView):
 
 class EachUser(APIView):
     def get(self, request, pk):
-        user = User.objects.get(id=pk)
+        try:
+            user = User.objects.get(id=pk)
+        except ObjectDoesNotExist:
+            return Response({"message": "User does not exist"}, status=status.HTTP_404_NOT_FOUND)
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
