@@ -16,6 +16,7 @@ urlpatterns = [
     path("each-option/<int:pk>/", EachOptionView.as_view(), name="each option"),
     path("each-answer/<int:pk>/", EachAnswerView.as_view(), name="each answer"),
     path("all_users/", GetUsers.as_view(), name="all users"),
+    path("user/<int:pk>/", EachUser.as_view(), name="each user"),
     path("register/", RegisterView.as_view(), name="register"),
     path("login/", LoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(), name="logout"),
