@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "rest_framework",
     'rest_framework.authtoken',
     "redmark_app",
+    "redmark_app.tests",
 ]
 
 MIDDLEWARE = [
