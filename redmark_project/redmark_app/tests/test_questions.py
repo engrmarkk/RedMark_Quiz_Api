@@ -34,5 +34,4 @@ class QuestionTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Question.objects.count(), 1)
         self.assertEqual(Question.objects.get().question_text, 'test question')
-        self.assertEqual(Question.objects.get().options, {})
-    
+        self.assertEqual(Question.objects.get().answer, None)
