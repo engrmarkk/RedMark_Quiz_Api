@@ -39,3 +39,12 @@ class QuestionTests(APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['question_text'], 'test question')
+
+    def test_update_each_question(self):
+        url = reverse("each_question", args=[1])
+        data = {
+            "question_text": "test question updated"
+        }
+        response = self.client.put(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['question_text'], 'test question updated')
