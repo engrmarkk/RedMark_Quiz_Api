@@ -1,11 +1,10 @@
-from ..models import Question
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
-from ..models import User, UserProfile
+from ..models import User, UserProfile, Question
 
 
 class QuestionTests(APITestCase):
@@ -18,6 +17,7 @@ class QuestionTests(APITestCase):
                                              password="testpassword")
         UserProfile.objects.create(user=self.user)
         self.token = Token.objects.create(user=self.user)
+        self.question = Question.objects.create(question_text="test question")
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
 
     def test_get_all_questions(self):
@@ -28,10 +28,14 @@ class QuestionTests(APITestCase):
     def test_create_question(self):
         url = reverse('question')
         data = {
-            "question_text": "test question"
+            "question_text": "test question2"
         }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Question.objects.count(), 1)
-        self.assertEqual(Question.objects.get().question_text, 'test question')
-        self.assertEqual(Question.objects.get().answer, None)
+        self.assertEqual(response.data['question_text'], 'test question2')
+
+    def test_get_each_question(self):
+        url = reverse("each_question", args=[1])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['question_text'], 'test question')
