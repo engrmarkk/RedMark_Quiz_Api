@@ -24,3 +24,15 @@ class QuestionTests(APITestCase):
         url = reverse('question')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_create_question(self):
+        url = reverse('question')
+        data = {
+            "question_text": "test question"
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Question.objects.count(), 1)
+        self.assertEqual(Question.objects.get().question_text, 'test question')
+        self.assertEqual(Question.objects.get().options, {})
+    
