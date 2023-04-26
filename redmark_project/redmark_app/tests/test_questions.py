@@ -48,3 +48,10 @@ class QuestionTests(APITestCase):
         response = self.client.put(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['question_text'], 'test question updated')
+
+    def test_delete_each_question(self):
+        url = reverse("each_question", args=[1])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['message'], 'Question deleted successfully')
+        self.assertEqual(Question.objects.count(), 0)
