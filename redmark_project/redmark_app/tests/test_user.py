@@ -1,4 +1,3 @@
-from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -30,3 +29,15 @@ class UserTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['username'], 'testuser')
         self.assertEqual(response.data['first_name'], 'testfirstname')
+
+    def test_register_user(self):
+        url = reverse('register')
+        data = {
+            "username": "testregistration",
+            "first_name": "testfirstname",
+            "last_name": "testlastname",
+            "email": "testreg@email.com",
+            "password": "Testpassword1"
+        }
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
