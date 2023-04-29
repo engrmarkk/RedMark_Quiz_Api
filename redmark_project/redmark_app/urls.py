@@ -7,7 +7,7 @@ from .endpoints.user.auth import *
 
 
 urlpatterns = [
-    path("questions", QuestionView.as_view(), name="question"),
+    path("questions/", QuestionView.as_view(), name="question"),
     path("<int:pk>/", EachQuestionView.as_view(), name="each_question"),
     path("options/", OptionView.as_view(), name="options"),
     path("options/<int:question_id>/", PostOptionView.as_view(), name="each_option"),
